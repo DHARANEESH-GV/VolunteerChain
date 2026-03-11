@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VolunteerChain - Intelligent Disaster Relief Coordination</title>
+   
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+   
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+   
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                            800: '#3730a3', 900: '#312e81',
+                        },
+                        accent: {
+                            50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74',
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c',
+                            800: '#9a3412', 900: '#7c2d12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+       
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+       
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); }
+        .dark .glass { background: rgba(30, 41, 59, 0.95); }
+       
+        .gradient-text {
+            background: linear-gradient(135deg, #4f46e5 0%, #f97316 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+       
+        .hero-gradient { background: linear-gradient(135deg, rgba(79, 70, 229, 0.9) 0%, rgba(249, 115, 22, 0.8) 100%); }
+       
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25); }
+       
+        /* Modal Styles */
+        .modal { opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content { transform: scale(0.9); transition: transform 0.3s ease; }
+        .modal.active .modal-content { transform: scale(1); }
+       
+        /* Tab Styles */
+        .tab-btn { position: relative; }
+        .tab-btn::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            width: 0; height: 3px; background: linear-gradient(135deg, #4f46e5, #f97316);
+            transform: translateX(-50%); transition: width 0.3s ease;
+        }
+        .tab-btn.active::after { width: 100%; }
+       
+        /* Accordion */
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .accordion-content.active { max-height: 500px; }
+       
+        /* Counter Animation */
+        @keyframes countUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .counter { animation: countUp 0.8s ease forwards; }
+       
+        /* Testimonial Carousel */
+        .testimonial-track { transition: transform 0.5s ease; }
+       
+        /* Loading Spinner */
+        .spinner { border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+       
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4f46e5; }
+       
+        /* Dark mode scrollbar */
+        .dark ::-webkit-scrollbar-track { background: #1e293b; }
+        .dark ::-webkit-scrollbar-thumb { background: #4f46e5; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass border-b border-slate-200/50 dark:border-slate-700/50" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="scrollToSection('hero')">
+                    <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/1563c4f05-af1f-43ea-a832-0ddb11034436.png" alt="VolunteerChain" class="h-10 w-10">
+                    <span class="text-xl font-bold text-slate-900 dark:text-white">VolunteerChain</span>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-10">
+                    <a href="#how-it-works" class="nav-link text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors" onclick="scrollToSection('how-it-works')">How It Works</a>
+                    <a href="#features" class="nav-link text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors" onclick="scrollToSection('features')">Features</a>
+                    <a href="#dashboard" class="nav-link text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors" onclick="openModal('dashboard-modal')">Dashboard</a>
+                    <a href="#testimonials" class="nav-link text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors" onclick="scrollToSection('testimonials')">Testimonials</a>
+                    <a href="#faq" class="nav-link text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors" onclick="scrollToSection('faq')">FAQ</a>
+                    <a href="#contact" class="nav-link text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors" onclick="scrollToSection('contact')">Contact</a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Toggle Dark Mode">
+                        <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-6.646z"/></svg>
+                    </button>
+                    <button onclick="openModal('login-modal')" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors">Sign In</button>
+                    <button onclick="openModal('register-modal')" class="bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold py-2.5 px-6 rounded-full transition-all shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50">Get Started</button>
+                </div>
+
+                <button id="mobile-btn" class="lg:hidden text-slate-600 dark:text-slate-300" onclick="toggleMobileMenu()">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+        </div>
+       
+        <div id="mobile-menu" class="hidden lg:hidden bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#how-it-works" class="block py-2 text-slate-600 dark:text-slate-300" onclick="toggleMobileMenu()">How It Works</a>
+                <a href="#features" class="block py-2 text-slate-600 dark:text-slate-300" onclick="toggleMobileMenu()">Features</a>
+                <a href="#testimonials" class="block py-2 text-slate-600 dark:text-slate-300" onclick="toggleMobileMenu()">Testimonials</a>
+                <a href="#faq" class="block py-2 text-slate-600 dark:text-slate-300" onclick="toggleMobileMenu()">FAQ</a>
+                <a href="#contact" class="block py-2 text-slate-600 dark:text-slate-300" onclick="toggleMobileMenu()">Contact</a>
+                <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <button onclick="openModal('login-modal'); toggleMobileMenu()" class="block w-full text-left py-2 text-primary-600 font-semibold">Sign In</button>
+                    <button onclick="openModal('register-modal'); toggleMobileMenu()" class="block w-full bg-primary-600 text-white py-2 rounded-lg font-semibold mt-2">Get Started</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/12ca4ea5f-1c75-428f-8581-8fd8fe39ee3c.png')"></div>
+        <div class="absolute inset-0 hero-gradient"></div>
+       
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-32">
+            <div class="reveal">
+                <div class="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold px-4 py-2 rounded-full mb-6 animate-pulse">
+                    <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                    <span>🚀 AI + Blockchain for Disaster Relief</span>
+                </div>
+               
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                    Intelligent Coordination for <br class="hidden md:block" />
+                    <span class="text-accent-200">Real-Time Relief</span>
+                </h1>
+               
+                <p class="text-lg md:text-xl text-white/90 mb-10 max-w-2xl mx-auto font-light">
+                    Connecting verified volunteers with immediate local needs through decentralized technology that saves lives.
+                </p>
+               
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                    <button onclick="openModal('register-modal')" class="group bg-white text-primary-600 font-semibold py-4 px-8 rounded-full hover:bg-slate-100 transition-all shadow-xl transform hover:-translate-y-1 flex items-center justify-center space-x-2">
+                        <span>Find Volunteer Roles</span>
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </button>
+                    <button onclick="openModal('register-modal')" class="bg-white/10 backdrop-blur-sm border-2 border-white/50 text-white font-semibold py-4 px-8 rounded-full hover:bg-white/20 transition-all transform hover:-translate-y-1">
+                        Request Assistance
+                    </button>
+                </div>
+
+                <!-- Animated Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-white/20">
+                    <div class="reveal" style="transition-delay: 100ms">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="10000">0</div>
+                        <div class="text-sm text-white/70 mt-1">Verified Volunteers</div>
+                    </div>
+                    <div class="reveal" style="transition-delay: 200ms">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="500">0</div>
+                        <div class="text-sm text-white/70 mt-1">Organizations</div>
+                    </div>
+                    <div class="reveal" style="transition-delay: 300ms">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="50">0</div>
+                        <div class="text-sm text-white/70 mt-1">Countries</div>
+                    </div>
+                    <div class="reveal" style="transition-delay: 400ms">
+                        <div class="text-3xl md:text-4xl font-bold text-white counter" data-target="98">0</div>
+                        <div class="text-sm text-white/70 mt-1">% Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer" onclick="scrollToSection('how-it-works')">
+            <svg class="w-6 h-6 text-white/70 hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 bg-white dark:bg-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Simple Process</span>
+                <h2 class="text-4xl font-bold text-slate-900 dark:text-white mt-2">How It Works</h2>
+                <p class="text-slate-600 dark:text-slate-400 mt-4 max-w-2xl mx-auto">Three simple steps to make a meaningful impact</p>
+            </div>
+
+            <!-- Interactive Steps -->
+            <div class="relative">
+                <!-- Progress Line -->
+                <div class="hidden md:block absolute top-24 left-[16%] right-[16%] h-1 bg-slate-200 dark:bg-slate-700 rounded-full">
+                    <div id="step-progress" class="h-full bg-gradient-to-r from-primary-500 to-accent-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Step 1 -->
+                    <div class="reveal step-card card-hover bg-slate-50 dark:bg-slate-700 rounded-2xl p-8 border border-slate-100 dark:border-slate-600 cursor-pointer" onclick="showStepDetails(1)">
+                        <div class="absolute -top-6 left-8 w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-primary-500/30 step-indicator" data-step="1">1</div>
+                        <div class="pt-6">
+                            <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/1046a3190-be8c-4bf5-9d87-74d34a841293.png" alt="Verification" class="w-16 h-16 mb-4 rounded-xl">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Get Verified</h3>
+                            <p class="text-slate-600 dark:text-slate-400">Upload your skills, certifications, and licenses. Organizations register and complete vetting.</p>
+                            <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1 hover:space-x-2 transition-all">
+                                <span>Learn More</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="reveal step-card card-hover bg-slate-50 dark:bg-slate-700 rounded-2xl p-8 border border-slate-100 dark:border-slate-600 cursor-pointer" onclick="showStepDetails(2)" style="transition-delay: 100ms">
+                        <div class="absolute -top-6 left-8 w-12 h-12 bg-slate-300 dark:bg-slate-600 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-xl step-indicator" data-step="2">2</div>
+                        <div class="pt-6">
+                            <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/1046a3190-be8c-4bf5-9d87-74d34a841293.png" alt="AI Matching" class="w-16 h-16 mb-4 rounded-xl">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Get Matched</h3>
+                            <p class="text-slate-600 dark:text-slate-400">AI matches you to real-time crisis tasks based on demand, expertise, and proximity.</p>
+                            <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1 hover:space-x-2 transition-all">
+                                <span>Learn More</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="reveal step-card card-hover bg-slate-50 dark:bg-slate-700 rounded-2xl p-8 border border-slate-100 dark:border-slate-600 cursor-pointer" onclick="showStepDetails(3)" style="transition-delay: 200ms">
+                        <div class="absolute -top-6 left-8 w-12 h-12 bg-slate-300 dark:bg-slate-600 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-xl step-indicator" data-step="3">3</div>
+                        <div class="pt-6">
+                            <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/1046a3190-be8c-4bf5-9d87-74d34a841293.png" alt="Track" class="w-16 h-16 mb-4 rounded-xl">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Act & Track</h3>
+                            <p class="text-slate-600 dark:text-slate-400">Deploy to tasks. Post-mission, receive a tamper-proof certificate on the blockchain.</p>
+                            <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1 hover:space-x-2 transition-all">
+                                <span>Learn More</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step Details Modal -->
+            <div id="step-details" class="hidden mt-12 p-6 bg-gradient-to-r from-primary-50 to-accent-50 dark:from-slate-700 dark:to-slate-700 rounded-2xl reveal">
+                <h3 id="step-title" class="text-2xl font-bold text-slate-900 dark:text-white mb-4"></h3>
+                <p id="step-description" class="text-slate-600 dark:text-slate-400 mb-6"></p>
+                <div id="step-features" class="grid md:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section with Expandable Cards -->
+    <section id="features" class="py-24 bg-slate-50 dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Capabilities</span>
+                <h2 class="text-4xl font-bold text-slate-900 dark:text-white mt-2">Built for Impact</h2>
+                <p class="text-slate-600 dark:text-slate-400 mt-4">Click on any feature to learn more</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="reveal feature-card card-hover bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 cursor-pointer" onclick="toggleFeature(this)">
+                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center text-primary-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">AI/ML Optimization</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Skill-based assignment and optimal team creation algorithms</p>
+                    <div class="feature-details hidden space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Real-time skill matching</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Predictive resource allocation</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Auto-team formation</span>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1">
+                        <span>View Details</span>
+                        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="reveal feature-card card-hover bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 cursor-pointer" onclick="toggleFeature(this)" style="transition-delay: 100ms">
+                    <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900 rounded-xl flex items-center justify-center text-accent-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Blockchain Security</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Tamper-proof record of skills, training, and contributions</p>
+                    <div class="feature-details hidden space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Immutable credential storage</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Instant verification</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Transparent audit trail</span>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1">
+                        <span>View Details</span>
+                        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="reveal feature-card card-hover bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 cursor-pointer" onclick="toggleFeature(this)" style="transition-delay: 200ms">
+                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center text-primary-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Real-Time Mapping</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Live updates on needs and volunteer availability globally</p>
+                    <div class="feature-details hidden space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>GPS tracking</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Heat map visualization</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Resource density analysis</span>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1">
+                        <span>View Details</span>
+                        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="reveal feature-card card-hover bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 cursor-pointer" onclick="toggleFeature(this)">
+                    <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900 rounded-xl flex items-center justify-center text-accent-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Reputation System</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Build a verifiable portfolio of service and skills over time</p>
+                    <div class="feature-details hidden space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Mission completion badges</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Peer reviews</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Skill endorsements</span>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1">
+                        <span>View Details</span>
+                        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="reveal feature-card card-hover bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 cursor-pointer" onclick="toggleFeature(this)" style="transition-delay: 100ms">
+                    <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center text-primary-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Global Interoperability</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Use your profile across different crises and organizations</p>
+                    <div class="feature-details hidden space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Cross-platform compatibility</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Portable credentials</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Multi-language support</span>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1">
+                        <span>View Details</span>
+                        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="reveal feature-card card-hover bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-100 dark:border-slate-700 cursor-pointer" onclick="toggleFeature(this)" style="transition-delay: 200ms">
+                    <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900 rounded-xl flex items-center justify-center text-accent-600 mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Team Coordination</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">Optimal team creation for complex multi-skill operations</p>
+                    <div class="feature-details hidden space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Role-based assignments</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Communication channels</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600 dark:text-slate-400">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            <span>Progress tracking</span>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-primary-600 font-semibold text-sm flex items-center space-x-1">
+                        <span>View Details</span>
+                        <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section id="dashboard" class="py-24 bg-white dark:bg-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Live Platform</span>
+                    <h2 class="text-4xl font-bold text-slate-900 dark:text-white mt-2 mb-6">Real-Time Command Center</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mb-8 text-lg">Monitor disaster zones, track volunteer deployments, and manage resources from a single intuitive dashboard.</p>
+                   
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <span class="text-slate-700 dark:text-slate-300">Live crisis zone mapping</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <span class="text-slate-700 dark:text-slate-300">Volunteer availability tracking</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <span class="text-slate-700 dark:text-slate-300">Resource allocation analytics</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            </div>
+                            <span class="text-slate-700 dark:text-slate-300">Mission completion reports</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="openModal('dashboard-modal')" class="bg-gradient-to-r from-primary-600 to-accent-500 text-white font-semibold py-4 px-8 rounded-full hover:shadow-lg transition-all transform hover:-translate-y-1 flex items-center space-x-2">
+                        <span>View Live Demo</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </button>
+                </div>
+
+                <div class="reveal">
+                    <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/18e2969d8-4956-4ba7-907d-c42bc7a6d8c7.png" alt="Dashboard Preview" class="rounded-2xl shadow-2xl hover:shadow-3xl transition-shadow cursor-pointer" onclick="openModal('dashboard-modal')">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Carousel -->
+    <section id="testimonials" class="py-24 bg-slate-50 dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Success Stories</span>
+                <h2 class="text-4xl font-bold text-slate-900 dark:text-white mt-2">What People Say</h2>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto reveal">
+                <div class="overflow-hidden">
+                    <div id="testimonial-track" class="flex transition-transform duration-500">
+                        <!-- Testimonial 1 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg">
+                                <svg class="w-12 h-12 text-primary-200 dark:text-primary-800 mb-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.01691 21L5.01691 18C5.01691 16.8954 5.91234 16 7.01691 16H10.0169C10.5692 16 11.0169 15.5523 11.0169 15V9C11.0169 8.44772 10.5692 8 10.0169 8H6.01691C5.46462 8 5.01691 8.44772 5.01691 9V11C5.01691 11.5523 4.56919 12 4.01691 12H3.01691V5H13.0169V15C13.0169 18.3137 10.3306 21 7.01691 21H5.01691Z"/>
+                                </svg>
+                                <blockquote class="text-xl text-slate-700 dark:text-slate-300 mb-6">"After the Uttarakhand floods, VolunteerChain could have helped us deploy the 30 doctors on standby directly to the hardest-hit villages within hours, not days."</blockquote>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center text-white font-bold">DR</div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white">Dr. A. Sharma</div>
+                                        <div class="text-sm text-slate-500">Head of Relief Operations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 2 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg">
+                                <svg class="w-12 h-12 text-primary-200 dark:text-primary-800 mb-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.01691 21L5.01691 18C5.01691 16.8954 5.91234 16 7.01691 16H10.0169C10.5692 16 11.0169 15.5523 11.0169 15V9C11.0169 8.44772 10.5692 8 10.0169 8H6.01691C5.46462 8 5.01691 8.44772 5.01691 9V11C5.01691 11.5523 4.56919 12 4.01691 12H3.01691V5H13.0169V15C13.0169 18.3137 10.3306 21 7.01691 21H5.01691Z"/>
+                                </svg>
+                                <blockquote class="text-xl text-slate-700 dark:text-slate-300 mb-6">"The blockchain verification saved us weeks of paperwork. We could instantly confirm our volunteers' medical certifications and deploy them immediately."</blockquote>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-accent-500 to-primary-500 rounded-full flex items-center justify-center text-white font-bold">MJ</div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white">Maria Johnson</div>
+                                        <div class="text-sm text-slate-500">NGO Director</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testimonial 3 -->
+                        <div class="w-full flex-shrink-0 px-4">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg">
+                                <svg class="w-12 h-12 text-primary-200 dark:text-primary-800 mb-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H15.017C14.4647 8 14.017 8.44772 14.017 9V11C14.017 11.5523 13.5693 12 13.017 12H12.017V5H22.017V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM5.01691 21L5.01691 18C5.01691 16.8954 5.91234 16 7.01691 16H10.0169C10.5692 16 11.0169 15.5523 11.0169 15V9C11.0169 8.44772 10.5692 8 10.0169 8H6.01691C5.46462 8 5.01691 8.44772 5.01691 9V11C5.01691 11.5523 4.56919 12 4.01691 12H3.01691V5H13.0169V15C13.0169 18.3137 10.3306 21 7.01691 21H5.01691Z"/>
+                                </svg>
+                                <blockquote class="text-xl text-slate-700 dark:text-slate-300 mb-6">"As a volunteer, I love that my contributions are tracked and verified. The digital certificates I've earned have helped me advance my career in emergency management."</blockquote>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-14 h-14 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center text-white font-bold">RK</div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-white">Raj Kumar</div>
+                                        <div class="text-sm text-slate-500">Certified Volunteer</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carousel Controls -->
+                <div class="flex justify-center space-x-4 mt-8">
+                    <button onclick="prevTestimonial()" class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <div id="testimonial-dots" class="flex space-x-2"></div>
+                    <button onclick="nextTestimonial()" class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 bg-white dark:bg-slate-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Support</span>
+                <h2 class="text-4xl font-bold text-slate-900 dark:text-white mt-2">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <!-- FAQ 1 -->
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-semibold text-slate-900 dark:text-white">How does the verification process work?</span>
+                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                            Volunteers upload their certifications, licenses, and credentials through our secure portal. Our AI system validates documents against official databases, and blockchain technology creates an immutable record. Most verifications are completed within 24-48 hours.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-semibold text-slate-900 dark:text-white">Is VolunteerChain free to use?</span>
+                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                            Yes! VolunteerChain is free for individual volunteers. Organizations can start with a free tier for up to 50 volunteers, with premium plans available for larger operations that need advanced analytics and priority support.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-semibold text-slate-900 dark:text-white">What blockchain technology do you use?</span>
+                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                            We use a hybrid approach with Ethereum for credential verification and IPFS for document storage. This ensures maximum security while keeping transaction costs low. All data is encrypted and volunteers maintain full control over their information.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-semibold text-slate-900 dark:text-white">Can I use VolunteerChain internationally?</span>
+                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                            Absolutely! VolunteerChain operates in over 50 countries with multi-language support. Your verified profile and credentials are portable across borders, making it easy to volunteer during international crises.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-semibold text-slate-900 dark:text-white">How does the AI matching work?</span>
+                        <svg class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                            Our AI analyzes multiple factors including your skills, certifications, location, availability, and past experience. It then matches you with crisis tasks that need your specific expertise, considering urgency, proximity, and team composition requirements.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-slate-50 dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Get In Touch</span>
+                    <h2 class="text-4xl font-bold text-slate-900 dark:text-white mt-2 mb-6">Contact Us</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mb-8 text-lg">Have questions? We're here to help you get started with VolunteerChain.</p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center text-primary-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-900 dark:text-white">Email</div>
+                                <div class="text-slate-600 dark:text-slate-400">support@volunteerchain.org</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-accent-100 dark:bg-accent-900 rounded-xl flex items-center justify-center text-accent-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-900 dark:text-white">Phone</div>
+                                <div class="text-slate-600 dark:text-slate-400">+1 (555) 123-4567</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center text-primary-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-900 dark:text-white">Office</div>
+                                <div class="text-slate-600 dark:text-slate-400">San Francisco, CA</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/1d5f61f6b-9aee-42c4-9d19-96fa63b63814.png" alt="Team" class="rounded-2xl shadow-lg">
+                    </div>
+                </div>
+
+                <div class="reveal">
+                    <form id="contact-form" class="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-lg" onsubmit="handleContactSubmit(event)">
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">First Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="John">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Last Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Doe">
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                            <input type="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="john@example.com">
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Subject</label>
+                            <select class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                                <option>General Inquiry</option>
+                                <option>Volunteer Registration</option>
+                                <option>Organization Partnership</option>
+                                <option>Technical Support</option>
+                                <option>Press & Media</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Message</label>
+                            <textarea required rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none" placeholder="How can we help you?"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary-600 to-accent-500 text-white font-semibold py-4 px-8 rounded-xl hover:shadow-lg transition-all transform hover:-translate-y-1 flex items-center justify-center space-x-2">
+                            <span>Send Message</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-r from-primary-600 to-accent-500">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Ready to Make an Impact?</h2>
+            <p class="text-xl text-white/90 mb-10">Join thousands of verified volunteers and organizations coordinating relief efforts worldwide.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="openModal('register-modal')" class="bg-white text-primary-600 font-semibold py-4 px-10 rounded-full hover:bg-slate-100 transition-all shadow-xl transform hover:-translate-y-1">
+                    Register as Volunteer
+                </button>
+                <button onclick="openModal('register-modal')" class="bg-white/20 backdrop-blur-sm border-2 border-white/50 text-white font-semibold py-4 px-10 rounded-full hover:bg-white/30 transition-all transform hover:-translate-y-1">
+                    Register Organization
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/1563c4f05-af1f-43ea-a832-0ddb11034436.png" alt="Logo" class="h-8 w-8 brightness-200">
+                        <span class="text-lg font-bold text-white">VolunteerChain</span>
+                    </div>
+                    <p class="text-sm mb-6">Powering decentralized, coordinated relief through AI and blockchain technology.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                        <a href="#" class="hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                        <a href="#" class="hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">How It Works</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">For Volunteers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">For Organizations</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Press</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Cookie Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-slate-800 text-center text-sm">
+                &copy; 2024 VolunteerChain. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div class="modal-content bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full p-8 relative shadow-2xl">
+            <button onclick="closeModal('login-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+           
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Welcome Back</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">Sign in to your VolunteerChain account</p>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                    <input type="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
+                    <input type="password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="••••••••">
+                </div>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500">
+                        <span class="ml-2 text-sm text-slate-600 dark:text-slate-400">Remember me</span>
+                    </label>
+                    <a href="#" class="text-sm text-primary-600 hover:underline">Forgot password?</a>
+                </div>
+                <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-6 rounded-xl transition-all">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    Don't have an account?
+                    <button onclick="switchModal('login-modal', 'register-modal')" class="text-primary-600 font-semibold hover:underline">Register</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div class="modal-content bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('register-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+           
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Get Started</h2>
+            <p class="text-slate-600 dark:text-slate-400 mb-6">Join the VolunteerChain community</p>
+
+            <!-- Registration Tabs -->
+            <div class="flex space-x-4 mb-6 border-b border-slate-200 dark:border-slate-700">
+                <button class="tab-btn active pb-3 font-semibold text-primary-600" onclick="switchRegTab('volunteer')" id="tab-volunteer">Volunteer</button>
+                <button class="tab-btn pb-3 font-semibold text-slate-400" onclick="switchRegTab('organization')" id="tab-organization">Organization</button>
+            </div>
+
+            <form onsubmit="handleRegister(event)" class="space-y-4" id="register-form">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">First Name</label>
+                        <input type="text" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="John">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Last Name</label>
+                        <input type="text" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Doe">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email</label>
+                    <input type="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Password</label>
+                    <input type="password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="••••••••">
+                </div>
+                <div id="org-fields" class="hidden">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Organization Name</label>
+                        <input type="text" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" placeholder="Your Organization">
+                    </div>
+                </div>
+                <div class="flex items-start">
+                    <input type="checkbox" required class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500 mt-1">
+                    <span class="ml-2 text-sm text-slate-600 dark:text-slate-400">I agree to the <a href="#" class="text-primary-600 hover:underline">Terms of Service</a> and <a href="#" class="text-primary-600 hover:underline">Privacy Policy</a></span>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-primary-600 to-accent-500 text-white font-semibold py-3 px-6 rounded-xl transition-all hover:shadow-lg">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    Already have an account?
+                    <button onclick="switchModal('register-modal', 'login-modal')" class="text-primary-600 font-semibold hover:underline">Sign In</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Modal -->
+    <div id="dashboard-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div class="modal-content bg-white dark:bg-slate-800 rounded-2xl max-w-5xl w-full relative shadow-2xl max-h-[90vh] overflow-hidden">
+            <button onclick="closeModal('dashboard-modal')" class="absolute top-4 right-4 z-10 text-white bg-black/50 hover:bg-black/70 rounded-full p-2 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <img src="https://image.qwenlm.ai/public_source/33624557-85da-4988-a73d-1eec4da9c372/18e2969d8-4956-4ba7-907d-c42bc7a6d8c7.png" alt="Dashboard" class="w-full h-full object-cover rounded-2xl">
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 z-50 transform translate-y-20 opacity-0 transition-all duration-300">
+        <div class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-4 rounded-xl shadow-lg flex items-center space-x-3">
+            <svg class="w-5 h-5 text-green-400 dark:text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            <span id="toast-message" class="font-medium">Success!</span>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        }
+
+        // Initialize dark mode from localStorage
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Smooth Scroll
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function switchModal(fromId, toId) {
+            closeModal(fromId);
+            setTimeout(() => openModal(toId), 300);
+        }
+
+        // Registration Tab Switching
+        function switchRegTab(type) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-primary-600');
+                btn.classList.add('text-slate-400');
+            });
+            document.getElementById(`tab-${type}`).classList.add('active', 'text-primary-600');
+            document.getElementById(`tab-${type}`).classList.remove('text-slate-400');
+           
+            const orgFields = document.getElementById('org-fields');
+            if (type === 'organization') {
+                orgFields.classList.remove('hidden');
+            } else {
+                orgFields.classList.add('hidden');
+            }
+        }
+
+        // Step Details
+        const stepData = {
+            1: {
+                title: 'Get Verified',
+                description: 'Our verification process ensures that all volunteers have the proper credentials and training for disaster relief work.',
+                features: [
+                    'Upload certifications and licenses',
+                    'AI-powered document validation',
+                    'Blockchain-secured credential storage',
+                    '24-48 hour verification timeline'
+                ]
+            },
+            2: {
+                title: 'Get Matched',
+                description: 'Our AI algorithm matches you with opportunities that fit your skills, location, and availability.',
+                features: [
+                    'Real-time crisis task matching',
+                    'Skill-based assignment',
+                    'Proximity-based deployment',
+                    'Team composition optimization'
+                ]
+            },
+            3: {
+                title: 'Act & Track',
+                description: 'Deploy to your assigned tasks and track your impact with verifiable blockchain records.',
+                features: [
+                    'Mission deployment notifications',
+                    'Real-time progress tracking',
+                    'Blockchain-verified completion certificates',
+                    'Reputation and badge system'
+                ]
+            }
+        };
+
+        function showStepDetails(stepNum) {
+            const data = stepData[stepNum];
+            document.getElementById('step-title').textContent = data.title;
+            document.getElementById('step-description').textContent = data.description;
+           
+            const featuresContainer = document.getElementById('step-features');
+            featuresContainer.innerHTML = data.features.map(f => `
+                <div class="flex items-center space-x-2 text-sm text-slate-700 dark:text-slate-300">
+                    <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>${f}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('step-details').classList.remove('hidden');
+            document.getElementById('step-details').classList.add('active');
+
+            // Update progress indicators
+            document.querySelectorAll('.step-indicator').forEach((ind, idx) => {
+                const step = parseInt(ind.dataset.step);
+                if (step <= stepNum) {
+                    ind.classList.remove('bg-slate-300', 'dark:bg-slate-600', 'text-slate-600', 'dark:text-slate-400');
+                    ind.classList.add('bg-primary-600', 'text-white');
+                } else {
+                    ind.classList.add('bg-slate-300', 'dark:bg-slate-600', 'text-slate-600', 'dark:text-slate-400');
+                    ind.classList.remove('bg-primary-600', 'text-white');
+                }
+            });
+
+            // Update progress bar
+            document.getElementById('step-progress').style.width = `${(stepNum / 3) * 100}%`;
+
+            scrollToSection('step-details');
+        }
+
+        // Feature Card Toggle
+        function toggleFeature(card) {
+            const details = card.querySelector('.feature-details');
+            const icon = card.querySelector('button svg');
+           
+            if (details.classList.contains('hidden')) {
+                details.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                details.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Testimonial Carousel
+        let currentTestimonial = 0;
+        const totalTestimonials = 3;
+
+        function updateTestimonialDots() {
+            const dotsContainer = document.getElementById('testimonial-dots');
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < totalTestimonials; i++) {
+                const dot = document.createElement('button');
+                dot.className = `w-3 h-3 rounded-full transition-all ${i === currentTestimonial ? 'bg-primary-600 w-8' : 'bg-slate-300 dark:bg-slate-600'}`;
+                dot.onclick = () => goToTestimonial(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function goToTestimonial(index) {
+            currentTestimonial = index;
+            document.getElementById('testimonial-track').style.transform = `translateX(-${currentTestimonial * 100}%)`;
+            updateTestimonialDots();
+        }
+
+        function nextTestimonial() {
+            currentTestimonial = (currentTestimonial + 1) % totalTestimonials;
+            goToTestimonial(currentTestimonial);
+        }
+
+        function prevTestimonial() {
+            currentTestimonial = (currentTestimonial - 1 + totalTestimonials) % totalTestimonials;
+            goToTestimonial(currentTestimonial);
+        }
+
+        // Auto-rotate testimonials
+        setInterval(nextTestimonial, 5000);
+
+        // Accordion Toggle
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('svg');
+           
+            content.classList.toggle('active');
+            icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        // Counter Animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.target);
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+
+                const updateCounter = () => {
+                    current += step;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current).toLocaleString() + (counter.dataset.target === '98' ? '%' : counter.dataset.target === '50' ? '+' : counter.dataset.target === '10000' ? '+' : '+');
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target.toLocaleString() + (counter.dataset.target === '98' ? '%' : counter.dataset.target === '50' ? '+' : counter.dataset.target === '10000' ? '+' : '+');
+                    }
+                };
+                updateCounter();
+            });
+        }
+
+        // Form Handlers
+        function handleLogin(e) {
+            e.preventDefault();
+            closeModal('login-modal');
+            showToast('Successfully signed in!');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            closeModal('register-modal');
+            showToast('Account created successfully!');
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast('Message sent successfully!');
+            e.target.reset();
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Scroll Reveal Animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    el.classList.add('active');
+                }
+            });
+
+            // Trigger counter animation when stats are visible
+            const statsSection = document.querySelector('.counter');
+            if (statsSection) {
+                const rect = statsSection.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100 && !statsSection.classList.contains('animated')) {
+                    statsSection.classList.add('animated');
+                    animateCounters();
+                }
+            }
+        }
+
+        // Navbar Shadow on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-lg');
+            } else {
+                nav.classList.remove('shadow-lg');
+            }
+        });
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Initialize
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', () => {
+            revealOnScroll();
+            updateTestimonialDots();
+        });
+    </script>
+</body>
+</html>
+
