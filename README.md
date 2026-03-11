@@ -1,1 +1,2 @@
 # VolunteerChain
+World Environment Day, celebrated annually on June 5, was marked at the institution by 45 cadets from the second and third years, who enthusiastically engaged in various activities to promote environmental awareness. Under the guidance and supervision of Lt. Dr. Nijandhan K, the cadets took part in a series of creative and educational events designed to highlight the importance of protecting the natural world.
